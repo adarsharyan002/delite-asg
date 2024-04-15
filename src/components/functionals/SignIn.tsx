@@ -4,12 +4,29 @@ import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {  useState } from "react";
 import { Link } from "react-router-dom";
+import { UserSignInSchema, UserSignInSchemaType } from "@/lib/schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 
-export default function SignIn() {
+ const   SignIn = () => {
 
     const [showPassword,setShowPassword]=useState(false)
     const [passType,setPassType]=useState("password")
+
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        formState: { errors }
+      } = useForm<UserSignInSchemaType>({ resolver: zodResolver(UserSignInSchema) })
+       
+
+      //onSubmit handler
+      const onSubmit = ()=>{
+        const formData = getValues();
+        console.log(formData)
+       }
 
     const handleShowPassword=()=>{
         if(passType=="password")setPassType("text")
@@ -26,15 +43,16 @@ export default function SignIn() {
           <div className="flex justify-between space-y-2">
             <h1 className="text-3xl font-bold text-[#3A244A] ">Fill what we know<span className="text-[#D72638]">!</span></h1>
           </div>
-          <form className="space-y-4 flex flex-col gap-4">
+          <form className="space-y-4 flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
 
           <div className="space-y-2">
               <Input
                 className="border-0 border-b focus:border-b focus-visible:ring-transparent"
                 placeholder="Email"
-                type="email"
-                required
+               
+                {...register("email")}
               />
+               {errors.email && <span className="text-red-400">{errors.email.message}</span>}
             </div>
           
             <div className="relative space-y-2">
@@ -42,9 +60,10 @@ export default function SignIn() {
                 className="border-0 border-b  pr-2 focus:border-b focus-visible:ring-transparent" 
                 placeholder="Password"
                 type={passType}           
-                 required
+                {...register("password")}
             />
             {showPassword?<FaEyeSlash className="absolute right-2 top-2 text-gray-400"  onClick={handleShowPassword}  />:<FaEye onClick={handleShowPassword} className="absolute right-2 top-2 text-gray-400" /> }
+            {errors.password && <span className="text-red-400">{errors.password.message}</span>}
             </div>
            
             
@@ -60,3 +79,5 @@ export default function SignIn() {
     </div>
   );
 }
+
+export default  SignIn;
