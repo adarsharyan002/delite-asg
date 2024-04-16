@@ -43,7 +43,7 @@ import axios from 'axios';
             console.log('Response:', response.data);
             // Optionally, perform actions based on the response (e.g., show success message)
         
-          } catch (error) {
+          } catch (error:any) {
             if (axios.isAxiosError(error) && error.response) {
                 setError(error.response.data.error);
               }

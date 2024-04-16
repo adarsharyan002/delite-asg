@@ -41,7 +41,7 @@ const SignUp =()=> {
           const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/register`, formData);
           navigate('/email-sent');
           console.log('Response:', response.data);
-        } catch (error) {
+        } catch (error:any) {
           if (axios.isAxiosError(error)) {
             const axiosError = error as AxiosError; // Cast error to AxiosError type
             if (axiosError.response && axiosError.response.data && axiosError.response.data.message) {
