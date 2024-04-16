@@ -30,12 +30,12 @@ const SignUp =()=> {
       // on submit handler
       const onSubmit = async () => {
         const formData = getValues();
-    
+      
         if (formData.password !== confirmPassword) {
           alert("Passwords don't match");
           return;
         }
-    
+      
         try {
           setIsLoading(true); // Set loading state to true
           const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/register`, formData);
@@ -43,9 +43,9 @@ const SignUp =()=> {
           console.log('Response:', response.data);
         } catch (error:any) {
           if (axios.isAxiosError(error)) {
-            const axiosError = error as AxiosError; // Cast error to AxiosError type
-            if (axiosError.response && axiosError.response.data && axiosError.response.data.message) {
-              setError(axiosError.response.data.message);
+            // const axiosError = error as AxiosError; // Cast error to AxiosError type
+            if (error.response?.data?.message) {
+              setError(error.response.data.message);
             } else {
               setError('An unknown error occurred.'); // Fallback error message
             }
@@ -55,7 +55,7 @@ const SignUp =()=> {
           }
         } finally {
           setIsLoading(false); // Set loading state back to false after request completes
-        }
+        } 
       };
        
     const handleShowPassword=()=>{
