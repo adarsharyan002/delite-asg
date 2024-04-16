@@ -1,6 +1,6 @@
-# Vite React App with Environment Variable (`VITE_BASE_URL`)
+# Assignment
 
-This is a starter template for a Vite-powered React application that demonstrates how to use environment variables, specifically `VITE_BASE_URL`, in your project.
+
 
 ## Prerequisites
 
