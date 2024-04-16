@@ -25,5 +25,9 @@ npm install
 ### 3. Set Environment Variables
 ```bash
 VITE_BASE_URL=http://localhost:3000/
+```
 
+### 4. Start the server
+```bash
+npm run dev
 
