@@ -3,16 +3,21 @@ import signIn from '@/assets/signupin.png';
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {  useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserSignInSchema, UserSignInSchemaType } from "@/lib/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from 'axios';
+
 
 
  const   SignIn = () => {
 
     const [showPassword,setShowPassword]=useState(false)
     const [passType,setPassType]=useState("password")
+    const navigate=useNavigate()
+    const [isLoading, setIsLoading] = useState(false);
+
 
     const {
         register,
@@ -23,9 +28,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
        
 
       //onSubmit handler
-      const onSubmit = ()=>{
+      const onSubmit =async ()=>{
         const formData = getValues();
-        console.log(formData)
+       
+        try {
+            // Make an HTTP POST request using Axios
+            setIsLoading(true); 
+
+            const response = await axios.post('http://localhost:3000/api/v1/auth/login',formData);
+            navigate('/home')
+        
+            console.log('Response:', response.data);
+            // Optionally, perform actions based on the response (e.g., show success message)
+        
+          } catch (error) {
+            console.error('Error submitting form:', error);
+            // Handle error - show error message to the user or perform fallback actions
+            alert('Failed to submit form. Please try again.');
+          }finally {
+            setIsLoading(false); // Set loading state back to false after request completes
+          }
+        
+       
        }
 
     const handleShowPassword=()=>{
@@ -67,8 +91,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
             </div>
            
             
-            <Button className="w-full bg-[#3A244A] rounded-xl p-5" type="submit">
-              Sign In
+            <Button className="w-full bg-[#3A244A] rounded-xl p-5" type="submit" disabled={isLoading}>
+              {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
             <Link to="/"><Button className="w-full bg-transparent border-2 border-[#3A244A] rounded-xl p-5 text-black hover:bg-[#3A244A] hover:text-white " type="submit">
               Sign up

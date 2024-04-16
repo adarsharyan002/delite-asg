@@ -5,9 +5,10 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {  useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from 'axios';
 
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {  UserSignUpSchema, UserSignUpSchemaType } from "@/lib/schema";
 
 const SignUp =()=> {
@@ -15,6 +16,8 @@ const SignUp =()=> {
     const [showPassword,setShowPassword]=useState(false)
     const [passType,setPassType]=useState("password")
     const [confirmPassword,setConfirmPassword]=useState("")
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate()
 
     const {
         register,
@@ -24,14 +27,33 @@ const SignUp =()=> {
       } = useForm<UserSignUpSchemaType>({ resolver: zodResolver(UserSignUpSchema) })
 
       // on submit handler
-       const onSubmit = ()=>{
+       const onSubmit =async ()=>{
         const formData = getValues();
+
+        console.log(formData.password)
 
         if(formData.password !== confirmPassword){
             alert("Passwords don't match")
             return
         }
-        console.log(formData)
+
+        try {
+           
+            setIsLoading(true); 
+            const response = await axios.post('http://localhost:3000/api/v1/auth/register',formData);
+            navigate('/email-sent')
+        
+            console.log('Response:', response.data);
+            // Optionally, perform actions based on the response (e.g., show success message)
+        
+          } catch (error) {
+            console.error('Error submitting form:', error);
+            // Handle error - show error message to the user or perform fallback actions
+            alert('Failed to submit form. Please try again.');
+          }finally {
+            setIsLoading(false); // Set loading state back to false after request completes
+          }
+        
        }
 
        
@@ -104,13 +126,13 @@ const SignUp =()=> {
       <div className="space-y-2">
       <select
           className=" w-full border-0 p-2 rounded-sm border-b text-gray-500 focus:border-b focus-visible:ring-transparent text-sm"
-          {...register("contactMode")}
+          {...register("contactMethod")}
         >
           <option value="">Contact Method</option>
           <option value="email">Email</option>
           {/* Add more options for other contact modes */}
         </select>
-        {errors.contactMode && <span className="text-red-400">{errors.contactMode.message}</span>}
+        {errors.contactMethod && <span className="text-red-400">{errors.contactMethod.message}</span>}
 
       </div>
 
@@ -125,8 +147,8 @@ const SignUp =()=> {
         {errors.email && <span className="text-red-400">{errors.email.message}</span>}
       </div>
 
-            <Button className="w-full bg-[#3A244A] rounded-xl p-5" type="submit">
-              Sign up
+            <Button className="w-full bg-[#3A244A] rounded-xl p-5" type="submit" disabled={isLoading}>
+              {isLoading ? 'Signing Up...' : 'Sign up'}
             </Button>
           </form>
         </div>

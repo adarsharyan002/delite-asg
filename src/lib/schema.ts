@@ -10,7 +10,7 @@ export const UserSignUpSchema = z.object({
         /^(?=.*[A-Za-z])(?=.*\d).+/,
         "Password must contain at least one letter and one number"
       ),
-    contactMode: z.string().min(1,
+    contactMethod: z.string().min(1,
         "Contact Mode is required" ),
   
   });
