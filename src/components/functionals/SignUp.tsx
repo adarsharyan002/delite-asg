@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {  useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 
 import { Link, useNavigate } from "react-router-dom";
