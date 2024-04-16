@@ -16,11 +16,12 @@ Before getting started, ensure that you have the following installed on your mac
 ```bash
 git clone https://github.com/adarsharyan002/delite-asg.git
 cd delite-asg
+```
 
 ### 2. Install the dependencies
 ```bash
 npm install
-
+```
 ### 3. Set Environment Variables
 ```bash
 VITE_BASE_URL=http://localhost:3000/
