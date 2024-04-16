@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {  useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 
 import { Link, useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ const SignUp =()=> {
     const [confirmPassword,setConfirmPassword]=useState("")
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate()
+    const [error,setError]=useState("")
 
     const {
         register,
@@ -27,35 +28,35 @@ const SignUp =()=> {
       } = useForm<UserSignUpSchemaType>({ resolver: zodResolver(UserSignUpSchema) })
 
       // on submit handler
-       const onSubmit =async ()=>{
+      const onSubmit = async () => {
         const formData = getValues();
-
-        console.log(formData.password)
-
-        if(formData.password !== confirmPassword){
-            alert("Passwords don't match")
-            return
+    
+        if (formData.password !== confirmPassword) {
+          alert("Passwords don't match");
+          return;
         }
-
+    
         try {
-           
-            setIsLoading(true); 
-            const response = await axios.post('http://localhost:3000/api/v1/auth/register',formData);
-            navigate('/email-sent')
-        
-            console.log('Response:', response.data);
-            // Optionally, perform actions based on the response (e.g., show success message)
-        
-          } catch (error) {
+          setIsLoading(true); // Set loading state to true
+          const response = await axios.post('http://localhost:3000/api/v1/auth/register', formData);
+          navigate('/email-sent');
+          console.log('Response:', response.data);
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError; // Cast error to AxiosError type
+            if (axiosError.response && axiosError.response.data && axiosError.response.data.message) {
+              setError(axiosError.response.data.message);
+            } else {
+              setError('An unknown error occurred.'); // Fallback error message
+            }
+          } else {
             console.error('Error submitting form:', error);
-            // Handle error - show error message to the user or perform fallback actions
-            alert('Failed to submit form. Please try again.');
-          }finally {
-            setIsLoading(false); // Set loading state back to false after request completes
+            setError('An unexpected error occurred.'); // Fallback error message
           }
-        
-       }
-
+        } finally {
+          setIsLoading(false); // Set loading state back to false after request completes
+        }
+      };
        
     const handleShowPassword=()=>{
         if(passType=="password")setPassType("text")
@@ -151,6 +152,7 @@ const SignUp =()=> {
               {isLoading ? 'Signing Up...' : 'Sign up'}
             </Button>
           </form>
+          <p className="text-red-500 m-4">{error}</p>
         </div>
       </div>
     </div>

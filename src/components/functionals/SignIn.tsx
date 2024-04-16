@@ -17,6 +17,8 @@ import axios from 'axios';
     const [passType,setPassType]=useState("password")
     const navigate=useNavigate()
     const [isLoading, setIsLoading] = useState(false);
+    const [error,setError]=useState("")
+
 
 
     const {
@@ -42,9 +44,9 @@ import axios from 'axios';
             // Optionally, perform actions based on the response (e.g., show success message)
         
           } catch (error) {
-            console.error('Error submitting form:', error);
-            // Handle error - show error message to the user or perform fallback actions
-            alert('Failed to submit form. Please try again.');
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data.message);
+              }
           }finally {
             setIsLoading(false); // Set loading state back to false after request completes
           }
@@ -98,6 +100,8 @@ import axios from 'axios';
               Sign up
             </Button></Link>
           </form>
+          <p className="text-red-500 m-4">{error}</p>
+
         </div>
       </div>
     </div>
