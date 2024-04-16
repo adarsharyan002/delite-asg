@@ -37,7 +37,7 @@ import axios from 'axios';
             // Make an HTTP POST request using Axios
             setIsLoading(true); 
 
-            const response = await axios.post('http://localhost:3000/api/v1/auth/login',formData);
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/login`,formData);
             navigate('/home')
         
             console.log('Response:', response.data);
@@ -45,7 +45,7 @@ import axios from 'axios';
         
           } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
-                setError(error.response.data.message);
+                setError(error.response.data.error);
               }
           }finally {
             setIsLoading(false); // Set loading state back to false after request completes

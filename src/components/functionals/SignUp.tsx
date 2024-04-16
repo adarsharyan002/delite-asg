@@ -38,7 +38,7 @@ const SignUp =()=> {
     
         try {
           setIsLoading(true); // Set loading state to true
-          const response = await axios.post('http://localhost:3000/api/v1/auth/register', formData);
+          const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/auth/register`, formData);
           navigate('/email-sent');
           console.log('Response:', response.data);
         } catch (error) {
