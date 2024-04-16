@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import background from '@/assets/backround.jpg'
+import { useEffect } from "react";
 
 export default function Home() {
+
+    const history = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      history('/sign-in');
+    }
+  }, [history]);
+  
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center">
       <img

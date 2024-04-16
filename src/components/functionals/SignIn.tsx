@@ -41,6 +41,7 @@ import axios from 'axios';
             navigate('/home')
         
             console.log('Response:', response.data);
+            localStorage.setItem('token', response.data.token);
             // Optionally, perform actions based on the response (e.g., show success message)
         
           } catch (error:any) {
